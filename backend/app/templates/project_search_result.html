@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Search results for {{ role_title }}</h1>
+    {% for result in results %}
+        Project name: <a href="{{ url_for('project_display', project_id=result[0].id) }}">{{ result[0].name }} </a><br>
+        Filming Date: {{ result[0].filming_dates }} <br>
+        Description: {{ result[0].description }} <br>
+        Created by: <a href="{{ url_for('user_profile', username=result[1].username) }}">{{ result[1].username }}</a><br><br>
+    {% endfor %}
+{% endblock %}

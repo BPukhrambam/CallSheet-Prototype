@@ -1,5 +1,5 @@
 from fastapi import Depends, Form, Request, status, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from app import app, templates, mail
@@ -8,7 +8,7 @@ from app.dependencies import get_current_user, get_db
 from flask_mail import Message
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=JSONResponse)
 async def base(
     request: Request,
     current_user: User = Depends(get_current_user),
@@ -16,7 +16,7 @@ async def base(
 ):
     projects = db.query(Project).all()
     your_projects = db.query(Project).filter(Project.user_id == current_user.id).all()
-    return templates.TemplateResponse("base.html", {
+    return JSONResponse({
         "request": request,
         "title": "Home",
         "projects": projects,
@@ -25,21 +25,21 @@ async def base(
     })
 
 
-@app.get("/register", response_class=HTMLResponse)
+@app.get("/register", response_class=JSONResponse)
 async def register_get(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user_id")
     if user_id:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     
     skills = db.query(Skill).all()
-    return templates.TemplateResponse("register.html", {
+    return JSONResponse({
         "request": request,
         "title": "Register",
         "skills": skills
     })
 
 
-@app.post("/register", response_class=HTMLResponse)
+@app.post("/register", response_class=JSONResponse)
 async def register_post(
     request: Request,
     first_name: str = Form(...),
@@ -60,7 +60,7 @@ async def register_post(
     
     existing_user = db.query(User).filter(User.email == email.upper()).first()
     if existing_user:
-        return templates.TemplateResponse("register.html", {
+        return JSONResponse({
             "request": request,
             "title": "Register",
             "error": "User already exists."
@@ -90,19 +90,19 @@ async def register_post(
     return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
 
-@app.get("/login", response_class=HTMLResponse)
+@app.get("/login", response_class=JSONResponse)
 async def login_get(request: Request):
     user_id = request.cookies.get("user_id")
     if user_id:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     
-    return templates.TemplateResponse("login.html", {
+    return JSONResponse({
         "request": request,
         "title": "Sign In"
     })
 
 
-@app.post("/login", response_class=HTMLResponse)
+@app.post("/login", response_class=JSONResponse)
 async def login_post(
     request: Request,
     email: str = Form(...),
@@ -112,7 +112,7 @@ async def login_post(
 ):
     user = db.query(User).filter(User.email == email.upper()).first()
     if user is None or not user.check_password(password):
-        return templates.TemplateResponse("login.html", {
+        return JSONResponse({
             "request": request,
             "title": "Sign In",
             "error": "Invalid email or password"
@@ -123,21 +123,21 @@ async def login_post(
     return response
 
 
-@app.get("/new_project", response_class=HTMLResponse)
+@app.get("/new_project", response_class=JSONResponse)
 async def new_project_get(
     request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     roles = db.query(Role).all()
-    return templates.TemplateResponse("new_project.html", {
+    return JSONResponse({
         "request": request,
         "title": "Create New Project",
         "roles": roles
     })
 
 
-@app.post("/new_project", response_class=HTMLResponse)
+@app.post("/new_project", response_class=JSONResponse)
 async def new_project_post(
     request: Request,
     name: str = Form(...),
@@ -169,7 +169,7 @@ async def new_project_post(
     return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
 
-@app.get("/user/{username}", response_class=HTMLResponse)
+@app.get("/user/{username}", response_class=JSONResponse)
 async def user_profile(
     username: str,
     request: Request,
@@ -183,7 +183,7 @@ async def user_profile(
     user_name = f"{user.first_name} {user.last_name}"
     projects = db.query(Project).filter(Project.user_id == user.id).all()
     
-    return templates.TemplateResponse("user_profile.html", {
+    return JSONResponse({
         "request": request,
         "title": user_name,
         "user": user,
@@ -192,7 +192,7 @@ async def user_profile(
     })
 
 
-@app.post("/user/{username}/contact", response_class=HTMLResponse)
+@app.post("/user/{username}/contact", response_class=JSONResponse)
 async def send_contact_message(
     username: str,
     request: Request,
@@ -215,7 +215,7 @@ async def send_contact_message(
     msg.body = message
     mail.send(msg)
     
-    return templates.TemplateResponse("user_profile.html", {
+    return JSONResponse({
         "request": request,
         "title": f"{user.first_name} {user.last_name}",
         "user": user,
@@ -225,7 +225,7 @@ async def send_contact_message(
     })
 
 
-@app.get("/project/{project_id}", response_class=HTMLResponse)
+@app.get("/project/{project_id}", response_class=JSONResponse)
 async def project_display(
     project_id: int,
     request: Request,
@@ -247,7 +247,7 @@ async def project_display(
         if role:
             roles_needed_list.append(role.title)
     
-    return templates.TemplateResponse("project.html", {
+    return JSONResponse({
         "request": request,
         "title": project.name,
         "creator": creator,
@@ -256,7 +256,7 @@ async def project_display(
     })
 
 
-@app.get("/project_search", response_class=HTMLResponse)
+@app.get("/project_search", response_class=JSONResponse)
 async def project_search(
     request: Request,
     current_user: User = Depends(get_current_user),
@@ -265,14 +265,14 @@ async def project_search(
     projects = db.query(Project).all()
     roles = db.query(Role).all()
     
-    return templates.TemplateResponse("project_search.html", {
+    return JSONResponse({
         "request": request,
         "projects": projects,
         "roles": roles
     })
 
 
-@app.post("/project_search", response_class=HTMLResponse)
+@app.post("/project_search", response_class=JSONResponse)
 async def project_search_post(
     request: Request,
     search_by: str = Form(...),
@@ -295,7 +295,7 @@ async def project_search_post(
     return RedirectResponse(url="/project_search", status_code=status.HTTP_302_FOUND)
 
 
-@app.get("/project_search_result_name/{name}", response_class=HTMLResponse)
+@app.get("/project_search_result_name/{name}", response_class=JSONResponse)
 async def project_search_result_name(
     name: str,
     request: Request,
@@ -309,14 +309,14 @@ async def project_search_result_name(
         creator = db.query(User).filter(User.id == project.user_id).first()
         results.append({"project": project, "creator": creator})
     
-    return templates.TemplateResponse("project_search_result.html", {
+    return JSONResponse({
         "request": request,
         "query": name,
         "results": results
     })
 
 
-@app.get("/project_search_result_role/{role}", response_class=HTMLResponse)
+@app.get("/project_search_result_role/{role}", response_class=JSONResponse)
 async def project_search_result_role(
     role: int,
     request: Request,
@@ -338,7 +338,7 @@ async def project_search_result_role(
             creator = db.query(User).filter(User.id == project.user_id).first()
             results.append({"project": project, "creator": creator})
     
-    return templates.TemplateResponse("project_search_result.html", {
+    return JSONResponse({
         "request": request,
         "query": role_obj.title,
         "results": results,
@@ -346,20 +346,20 @@ async def project_search_result_role(
     })
 
 
-@app.get("/profile_search", response_class=HTMLResponse)
+@app.get("/profile_search", response_class=JSONResponse)
 async def profile_search(
     request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     skills = db.query(Skill).all()
-    return templates.TemplateResponse("profile_search.html", {
+    return JSONResponse({
         "request": request,
         "skills": skills
     })
 
 
-@app.post("/profile_search", response_class=HTMLResponse)
+@app.post("/profile_search", response_class=JSONResponse)
 async def profile_search_post(
     request: Request,
     search_by: str = Form(...),
@@ -382,7 +382,7 @@ async def profile_search_post(
     return RedirectResponse(url="/profile_search", status_code=status.HTTP_302_FOUND)
 
 
-@app.get("/profile_search_result_skill/{query}", response_class=HTMLResponse)
+@app.get("/profile_search_result_skill/{query}", response_class=JSONResponse)
 async def profile_search_result_skill(
     query: int,
     request: Request,
@@ -400,7 +400,7 @@ async def profile_search_result_skill(
         if user:
             user_list.append(user.username)
     
-    return templates.TemplateResponse("profile_search_result_skill.html", {
+    return JSONResponse({
         "request": request,
         "title": "Profile Search by Skill",
         "skill_title": skill.title,

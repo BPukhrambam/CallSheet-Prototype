@@ -1,0 +1,202 @@
+color {
+  /* View color palette in action here: https://coolors.co/tailwind/00357a-ff914d-00bf63 */
+  --regal-navy-50: #e5f1ff;
+  --regal-navy-100: #cce2ff;
+  --regal-navy-200: #99c5ff;
+  --regal-navy-300: #66a8ff;
+  --regal-navy-400: #338bff;
+  --regal-navy-500: #006eff;
+  --regal-navy-600: #0058cc;
+  --regal-navy-700: #004299;
+  --regal-navy-800: #002c66;
+  --regal-navy-900: #001633;
+  --regal-navy-950: #000f24;
+
+  --tangerine-50: #ffefe5;
+  --tangerine-100: #ffe0cc;
+  --tangerine-200: #ffc099;
+  --tangerine-300: #ffa166;
+  --tangerine-400: #ff8133;
+  --tangerine-500: #ff6200;
+  --tangerine-600: #cc4e00;
+  --tangerine-700: #993b00;
+  --tangerine-800: #662700;
+  --tangerine-900: #331400;
+  --tangerine-950: #240e00;
+
+  --emerald-50: #e5fff3;
+  --emerald-100: #ccffe6;
+  --emerald-200: #99ffce;
+  --emerald-300: #66ffb5;
+  --emerald-400: #33ff9c;
+  --emerald-500: #00ff84;
+  --emerald-600: #00cc69;
+  --emerald-700: #00994f;
+  --emerald-800: #006635;
+  --emerald-900: #00331a;
+  --emerald-950: #002412;
+}
+
+h1 {
+  font-family: Futura;
+  font-size: 3rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h2 {
+  font-family: Futura;
+  font-size: 2.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h3 {
+  font-family: Futura;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h4 {
+  font-family: Futura;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h5 {
+  font-family: Futura;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+p {
+  font-family: Futura;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.navbar-wrapper {
+
+}
+
+.site-title {
+
+}
+
+.search-bar {
+
+}
+
+.search-selector {
+
+}
+
+.dropdown-icon {
+
+}
+
+.icon {
+
+}
+
+.search-field {
+
+}
+
+.search-icon {
+
+}
+
+.theme-icon {
+
+}
+
+.account-icon {
+
+}
+
+.film-card-wrapper {
+
+}
+
+.film-title {
+
+}
+
+.film-dates {
+
+}
+
+.film-details {
+
+}
+
+.projects-wrapper {
+
+}
+
+.projects-header {
+
+}
+
+.projects-header-icon {
+
+}
+
+.projects {
+  
+}
+
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+*/

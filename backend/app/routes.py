@@ -2,7 +2,7 @@ from fastapi import Depends, Form, Request, status, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
-from app import app, templates, mail
+from app import app, mail
 from app.models import User, Project, Role, Skill, UserToSkill, UserToProjectToRole
 from app.dependencies import get_current_user, get_db
 from flask_mail import Message

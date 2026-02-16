@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { dummyData } from './dummy-data.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,7 +7,6 @@ function App() {
   return (
     <>
       <Navbar />
-      <FilmCard />
       <Projects />
     </>
   )
@@ -69,17 +68,39 @@ function Navbar() {
   )
 }
 
-function FilmCard() {
+/* export const Films = () => {
+  return (
+    <>
+      <div className="film-container">
+        {dummyData.map((data, key) => {
+          return (
+            <div key={key}>
+              <FilmCard
+                key={key}
+                NAME={data.NAME}
+                DATES={data.DATES}
+                DESCRIPTION={data.DESCRIPTION}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}; */
+
+const FilmCard = ({ NAME, DATES, DESCRIPTION }: { NAME?: string; DATES?: string; DESCRIPTION?: string }) => {
+  if (!NAME) return <div />;
   return (
     <div className='film-card-wrapper'>
       <h4 className='film-title'>
-        Film Title
+        {NAME}
       </h4>
       <h5 className='film-dates'>
-        Film Dates
+        {DATES}
       </h5>
       <p className='film-details'>
-        Logline
+        {DESCRIPTION}
       </p>
       <p className='film-details'>
         Roles
@@ -100,7 +121,14 @@ function Projects() {
         </div>
       </div>
       <div className='projects'>
-        <FilmCard /> Repeated
+        {dummyData.map((data, key) => (
+          <FilmCard
+            key={key}
+            NAME={data.NAME}
+            DATES={data.DATES}
+            DESCRIPTION={data.DESCRIPTION}
+          />
+        ))}
       </div>
     </div>
   )

@@ -14,9 +14,7 @@ async def get_db():
 
 async def get_current_user(
     user_id: int | None = Cookie(None),
-    db: Session = Depends(get_db)
-) -> User:
-    """Get the current authenticated user from cookie."""
+    db: Session = Depends(get_db)) -> User:
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

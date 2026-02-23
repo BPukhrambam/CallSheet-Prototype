@@ -121,7 +121,7 @@ function Projects({name, icon}: {name?: string; icon?: string;}) {
   return (
     <div className='projects-wrapper'>
       <div className='projects-header'>
-        <h2>
+        <h2 className='projects-header-title'>
           {name}
         </h2>
         <img src={icon} className="projects-header-icon icon" alt="Action icon" />

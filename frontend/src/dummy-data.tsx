@@ -1,3 +1,26 @@
+import request from './App.tsx'
+
+const apiURL = "";
+function fetchData(request: String) {
+  fetch(apiURL + request)
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    else {
+      throw new Error('API request failed')
+    }
+  })
+}
+
+/*export const data: {
+  ID: string;
+  NAME: string;
+  DATES: string;
+  DESCRIPTION: string;
+  USER_ID: string;
+}[] = fetchData(request);*/
+
 export const dummyData: {
   ID: string;
   NAME: string;

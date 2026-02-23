@@ -95,29 +95,31 @@ p {
 }
 
 .navbar-wrapper {
-  display: grid;
-  grid-template-columns: auto auto 4rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
   width: 100%;
-  justify-items: center;
+  padding: 1rem 0;
 }
 
 .navbar-item {
-
+  padding: 0.5rem !important;
+  margin: 0 !important;
 }
 
 .site-title {
-
+  margin-right: auto;
 }
 
 .search-bar {
-  display: grid;
-  grid-template-columns: auto auto auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
   background-image: linear-gradient(to bottom right, var(--regal-navy-200), var(--regal-navy-100));
   border: 2px solid var(--emerald-600);
   border-radius: 1rem;
-  padding: 0.5rem;
-  margin: 1rem;
-  max-height: 2rem;
+  padding: 0.5rem 1rem;
   box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.1);
 }
 
@@ -126,12 +128,14 @@ p {
   background-color: rgba(0,0,0,0);
   border: none;
   font-size: 1rem;
-  margin: 0.5rem;
-  padding: 0rem;
+  margin: 0 !important;
+  padding: 0;
 }
 
 .search-field {
-
+  min-width: 200px;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .film-card-wrapper {
@@ -153,7 +157,7 @@ p {
 }
 
 .film-title {
-
+  
 }
 
 .film-dates {
@@ -170,6 +174,13 @@ p {
 
 .projects-header {
  display: flex;
+}
+
+.projects-header-title {
+   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.projects-header-title:hover {
 }
 
 .projects {

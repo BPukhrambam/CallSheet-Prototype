@@ -1,13 +1,29 @@
 import { dummyData } from './dummy-data.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
+import accountIcon from './assets/account_circle.svg'
+import bookmarkIcon from './assets/Bookmark.svg'
+import dropdownIcon from './assets/Chevron down.svg'
+import goIcon from './assets/Corner up-right.svg'
+import editIcon from './assets/Edit.svg'
+import gridIcon from './assets/Grid.svg'
+import listIcon from './assets/List.svg'
+import moonIcon from './assets/Moon.svg'
+import plusIcon from './assets/Plus.svg'
+import searchIcon from './assets/Search.svg'
+import sunIcon from './assets/Sun.svg'
+
+
 import './App.css'
 
 function App() {
   return (
     <>
       <Navbar />
-      <Projects />
+      <div className='side-by-side'>
+        <Projects name="Your Projects" icon={plusIcon}/>
+        <Projects name="Community Projects" icon={goIcon}/>
+      </div>
     </>
   )
   /* const [count, setCount] = useState(0)
@@ -41,33 +57,25 @@ function App() {
 function Navbar() {
   return (
     <div className='navbar-wrapper'>
-      <div className='site-title'>
+      <div className='navbar-item site-title'>
         Callsheet title
       </div>
-      <div className='search-bar'>
-        <div className='search-selector'>
-          Choose projects/people
-          <div className='dropdown-icon icon'>
-
-          </div>
-        </div>
+      <div className='navbar-item search-bar'>
+        <select className='search-selector'>
+          <option>Projects</option>
+          <option>People</option>
+        </select>
         <div className='search-field'>
           Search for projects/people
         </div>
-        <div className='search-icon icon'>
-          Search icon
-        </div>
+        <img src={searchIcon} className="search-icon icon" alt="Search icon" />
       </div>
-      <div className='theme-icon icon'>
-          Theme icon
-      </div>
-      <div className='account-icon icon'>
-          Account icon
-      </div>
+      <img src={sunIcon} className="navbar-item theme-icon icon" alt="Theme icon, sun" />
+      <img src={accountIcon} className="navbar-item account-icon icon" alt="Account icon" />
     </div>
   )
 }
-
+// <img src={dropdownIcon} className="dropdown-icon icon" alt="Dropdown icon" />
 /* export const Films = () => {
   return (
     <>
@@ -109,16 +117,14 @@ const FilmCard = ({ NAME, DATES, DESCRIPTION }: { NAME?: string; DATES?: string;
   )
 }
 
-function Projects() {
+function Projects({name, icon}: {name?: string; icon?: string;}) {
   return (
     <div className='projects-wrapper'>
       <div className='projects-header'>
         <h2>
-          EITHER: "Your Projects" or "Find Projects" or "Search Results"
+          {name}
         </h2>
-        <div className='projects-header-icon icon'>
-          ICON or ICONS, Right Aligned
-        </div>
+        <img src={icon} className="projects-header-icon icon" alt="Action icon" />
       </div>
       <div className='projects'>
         {dummyData.map((data, key) => (

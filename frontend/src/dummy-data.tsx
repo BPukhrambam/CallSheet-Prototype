@@ -1,6 +1,5 @@
-import request from './App.tsx'
-
 const apiURL = "";
+
 function fetchData(request: String) {
   fetch(apiURL + request)
   .then(response => {

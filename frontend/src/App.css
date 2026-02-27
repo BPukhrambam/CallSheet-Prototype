@@ -42,6 +42,7 @@
   font-size: 16px;
   /* background-image: linear-gradient(to top left, var(--regal-navy-950), var(--regal-navy-900)); */
   background-color: var(--soft-yellow);
+  animation: bg-gradient 5s infinite;
 }
 
 * {
@@ -195,6 +196,18 @@ p {
 .side-by-side {
   display: grid;
   grid-template-columns: auto auto;
+}
+
+@keyframes bg-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* #root {

@@ -12,6 +12,7 @@ import moonIcon from './assets/Moon.svg'
 import plusIcon from './assets/Plus.svg'
 import searchIcon from './assets/Search.svg'
 import sunIcon from './assets/Sun.svg'
+// import fetchData from './dummy-data.tsx'
 
 
 import './App.css'
@@ -127,7 +128,7 @@ function Projects({name, icon}: {name?: string; icon?: string;}) {
         <img src={icon} className="projects-header-icon icon" alt="Action icon" />
       </div>
       <div className='projects'>
-        {dummyData.map((data, key) => (
+        {dummyData.map((data, key) => ( // REPLACE WITH QUERIED DATA
           <FilmCard
             key={key}
             NAME={data.NAME}

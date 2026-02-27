@@ -1,6 +1,6 @@
 const apiURL = "";
 
-function fetchData(request: String) {
+export function fetchData(request: String) {
   fetch(apiURL + request)
   .then(response => {
     if (response.ok) {
@@ -11,6 +11,7 @@ function fetchData(request: String) {
     }
   })
 }
+
 
 /*export const data: {
   ID: string;

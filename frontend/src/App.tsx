@@ -12,7 +12,7 @@ import moonIcon from './assets/Moon.svg'
 import plusIcon from './assets/Plus.svg'
 import searchIcon from './assets/Search.svg'
 import sunIcon from './assets/Sun.svg'
-// import fetchData from './dummy-data.tsx'
+import {fetchData} from './dummy-data.tsx'
 
 
 import './App.css'

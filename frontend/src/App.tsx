@@ -14,6 +14,11 @@ import searchIcon from './assets/Search.svg'
 import sunIcon from './assets/Sun.svg'
 import {fetchData} from './dummy-data.tsx'
 
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Login from "./pages/login";
+import Film from "./pages/film";
+import Account from "./pages/account";
+import Results from "./pages/results";
 
 import './App.css'
 
@@ -21,15 +26,16 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className='side-by-side'>
-        <Projects name="Your Projects" icon={plusIcon}/>
-        <Projects name="Community Projects" icon={goIcon}/>
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/film" element={<Film />} />
+        <Route path="/results" element={<Results />} />
+        <Route path="/account" element={<Account />} />
+      </Routes>
     </>
   )
-  /* const [count, setCount] = useState(0)
-
-  return (
+  /* return (
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
@@ -55,11 +61,36 @@ function App() {
   ) */
 }
 
-function Navbar() {
+function Home() {
+  return (
+    <>
+      <div className='side-by-side'>
+            <Projects name="Your Projects" icon={plusIcon}/>
+            <Projects name="Community Projects" icon={goIcon}/>
+      </div>
+    </>
+  )
+}
+
+export function Navbar() {
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    navigate("/");
+  };
+
+  const goToResults = () => {
+    navigate("/results");
+  };
+
+  const goToAccount = () => {
+    navigate("/account");
+  };
+
   return (
     <div className='navbar-wrapper'>
       <div className='navbar-item site-title'>
-        Callsheet title
+        <h3 onClick={goHome}>Callsheet title</h3>
       </div>
       <div className='navbar-item search-bar'>
         <select className='search-selector'>
@@ -69,10 +100,10 @@ function Navbar() {
         <div className='search-field'>
           Search for projects/people
         </div>
-        <img src={searchIcon} className="search-icon icon" alt="Search icon" />
+        <img src={searchIcon} onClick={goToResults} className="search-icon icon" alt="Search icon" />
       </div>
       <img src={sunIcon} className="navbar-item theme-icon icon" alt="Theme icon, sun" />
-      <img src={accountIcon} className="navbar-item account-icon icon" alt="Account icon" />
+      <img src={accountIcon} onClick={goToAccount} className="navbar-item account-icon icon" alt="Account icon" />
     </div>
   )
 }
@@ -101,43 +132,47 @@ function Navbar() {
 const FilmCard = ({ NAME, DATES, DESCRIPTION }: { NAME?: string; DATES?: string; DESCRIPTION?: string }) => {
   if (!NAME) return <div />;
   return (
-    <div className='film-card-wrapper'>
-      <h4 className='film-title'>
-        {NAME}
-      </h4>
-      <h5 className='film-dates'>
-        {DATES}
-      </h5>
-      <p className='film-details'>
-        {DESCRIPTION}
-      </p>
-      <p className='film-details'>
-        Roles
-      </p>
-    </div>
+    <>
+      <div className='film-card-wrapper'>
+        <h4 className='film-title'>
+          {NAME}
+        </h4>
+        <h5 className='film-dates'>
+          {DATES}
+        </h5>
+        <p className='film-details'>
+          {DESCRIPTION}
+        </p>
+        <p className='film-details'>
+          Roles
+        </p>
+      </div>
+    </>
   )
 }
 
 function Projects({name, icon}: {name?: string; icon?: string;}) {
   return (
-    <div className='projects-wrapper'>
-      <div className='projects-header'>
-        <h2 className='projects-header-title'>
-          {name}
-        </h2>
-        <img src={icon} className="projects-header-icon icon" alt="Action icon" />
+    <>
+      <div className='projects-wrapper'>
+        <div className='projects-header'>
+          <h2 className='projects-header-title'>
+            {name}
+          </h2>
+          <img src={icon} className="projects-header-icon icon" alt="Action icon" />
+        </div>
+        <div className='projects'>
+          {dummyData.map((data, key) => ( // REPLACE WITH QUERIED DATA
+            <FilmCard
+              key={key}
+              NAME={data.NAME}
+              DATES={data.DATES}
+              DESCRIPTION={data.DESCRIPTION}
+            />
+          ))}
+        </div>
       </div>
-      <div className='projects'>
-        {dummyData.map((data, key) => ( // REPLACE WITH QUERIED DATA
-          <FilmCard
-            key={key}
-            NAME={data.NAME}
-            DATES={data.DATES}
-            DESCRIPTION={data.DESCRIPTION}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   )
 }
 

@@ -90,7 +90,7 @@ export function Navbar() {
   return (
     <div className='navbar-wrapper'>
       <div className='navbar-item site-title'>
-        <h3 onClick={goHome} className='link'>Callsheet title</h3>
+        <h3 onClick={goHome} className='site-title-text link'>CALLSHEET</h3>
       </div>
       <div className='navbar-item search-bar'>
         <select className='search-selector link'>

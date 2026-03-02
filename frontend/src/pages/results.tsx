@@ -1,8 +1,24 @@
+import { FilmCard } from '../App.tsx'
+import { dummyData } from '../dummy-data.tsx';
+
 export default function Results() {
   return (
-    <div>
-      <h1>Results Page</h1>
-      <p>This is the results page</p>
+    <>
+    <div className='search-results-wrapper'>
+      <h1>Search Results</h1>
+      <div className='projects'>
+                {dummyData.map((data, key) => ( // REPLACE WITH QUERIED DATA
+                  <FilmCard
+                    key={key}
+                    FILMID={data.ID}
+                    NAME={data.NAME}
+                    DATES={data.DATES}
+                    DESCRIPTION={data.DESCRIPTION}
+                  />
+                ))}
+              </div>
     </div>
+    </>
+    
   );
 }

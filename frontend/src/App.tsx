@@ -29,7 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/film" element={<Film />} />
+        <Route path="/film/:FILMID" element={<Film />} />
         <Route path="/results" element={<Results />} />
         <Route path="/account" element={<Account />} />
       </Routes>
@@ -90,20 +90,20 @@ export function Navbar() {
   return (
     <div className='navbar-wrapper'>
       <div className='navbar-item site-title'>
-        <h3 onClick={goHome}>Callsheet title</h3>
+        <h3 onClick={goHome} className='link'>Callsheet title</h3>
       </div>
       <div className='navbar-item search-bar'>
-        <select className='search-selector'>
+        <select className='search-selector link'>
           <option>Projects</option>
           <option>People</option>
         </select>
         <div className='search-field'>
           Search for projects/people
         </div>
-        <img src={searchIcon} onClick={goToResults} className="search-icon icon" alt="Search icon" />
+        <img src={searchIcon} onClick={goToResults} className="search-icon icon link" alt="Search icon" />
       </div>
-      <img src={sunIcon} className="navbar-item theme-icon icon" alt="Theme icon, sun" />
-      <img src={accountIcon} onClick={goToAccount} className="navbar-item account-icon icon" alt="Account icon" />
+      <img src={sunIcon} className="navbar-item theme-icon icon link" alt="Theme icon, sun" />
+      <img src={accountIcon} onClick={goToAccount} className="navbar-item account-icon icon link" alt="Account icon" />
     </div>
   )
 }
@@ -129,11 +129,18 @@ export function Navbar() {
   );
 }; */
 
-const FilmCard = ({ NAME, DATES, DESCRIPTION }: { NAME?: string; DATES?: string; DESCRIPTION?: string }) => {
+export const FilmCard = ({ NAME, DATES, DESCRIPTION, FILMID }: { NAME?: string; DATES?: string; DESCRIPTION?: string; FILMID?: string }) => {
+  const navigate = useNavigate();
+  
   if (!NAME) return <div />;
+
+  const handleClick = () => {
+    navigate(`/film/${FILMID}`);
+  };
+
   return (
     <>
-      <div className='film-card-wrapper'>
+      <div className='film-card-wrapper link' onClick={handleClick}>
         <h4 className='film-title'>
           {NAME}
         </h4>
@@ -159,12 +166,13 @@ function Projects({name, icon}: {name?: string; icon?: string;}) {
           <h2 className='projects-header-title'>
             {name}
           </h2>
-          <img src={icon} className="projects-header-icon icon" alt="Action icon" />
+          <img src={icon} className="projects-header-icon icon link" alt="Action icon" />
         </div>
         <div className='projects'>
           {dummyData.map((data, key) => ( // REPLACE WITH QUERIED DATA
             <FilmCard
               key={key}
+              FILMID={data.ID}
               NAME={data.NAME}
               DATES={data.DATES}
               DESCRIPTION={data.DESCRIPTION}

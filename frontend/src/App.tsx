@@ -13,6 +13,7 @@ import plusIcon from './assets/Plus.svg'
 import searchIcon from './assets/Search.svg'
 import sunIcon from './assets/Sun.svg'
 import {fetchData} from './dummy-data.tsx'
+import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/clerk-react';
 
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./pages/login";
@@ -25,14 +26,19 @@ import './App.css'
 function App() {
   return (
     <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/film/:FILMID" element={<Film />} />
-        <Route path="/results" element={<Results />} />
-        <Route path="/account" element={<Account />} />
-      </Routes>
+      <SignedOut>
+        <SignIn />
+      </SignedOut>
+      <SignedIn>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/film/:FILMID" element={<Film />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/account" element={<Account />} />
+        </Routes>
+      </SignedIn>
     </>
   )
   /* return (
@@ -103,11 +109,14 @@ export function Navbar() {
         <img src={searchIcon} onClick={goToResults} className="search-icon icon link" alt="Search icon" />
       </div>
       <img src={sunIcon} className="navbar-item theme-icon icon link" alt="Theme icon, sun" />
-      <img src={accountIcon} onClick={goToAccount} className="navbar-item account-icon icon link" alt="Account icon" />
+      <UserButton />
     </div>
   )
 }
+
+// <img src={accountIcon} onClick={goToAccount} className="navbar-item account-icon icon link" alt="Account icon" />
 // <img src={dropdownIcon} className="dropdown-icon icon" alt="Dropdown icon" />
+
 /* export const Films = () => {
   return (
     <>

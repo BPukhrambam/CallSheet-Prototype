@@ -18,7 +18,6 @@ import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/clerk-react';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./pages/login";
 import Film from "./pages/film";
-import Account from "./pages/account";
 import Results from "./pages/results";
 
 import './App.css'
@@ -36,7 +35,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/film/:FILMID" element={<Film />} />
           <Route path="/results" element={<Results />} />
-          <Route path="/account" element={<Account />} />
         </Routes>
       </SignedIn>
     </>

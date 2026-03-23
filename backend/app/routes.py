@@ -17,7 +17,7 @@ async def base(
 ):
     projects = db.query(Project).all()
     your_projects = db.query(Project).filter(Project.user_id == current_user.id).all()
-    return JSONResponse({
+    return ({
         "title": "Home",
         "projects": projects,
         "user": current_user,

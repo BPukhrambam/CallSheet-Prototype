@@ -45,12 +45,34 @@
   animation: bg-gradient 5s infinite;
 }
 
+[data-theme="dark"] {
+  --regal-navy-50: #000f24;
+  --regal-navy-100: #002c66;
+  --regal-navy-200: #004299;
+  --regal-navy-300: #0058cc;
+  --regal-navy-400: #006eff;
+  --regal-navy-500: #338bff;
+  --regal-navy-600: #66a8ff;
+  --regal-navy-700: #99c5ff;
+  --regal-navy-800: #cce2ff;
+  --regal-navy-900: #e5f1ff;
+  --regal-navy-950: #f0f6ff;
+
+  --soft-yellow: #000f24;
+}
+
 * {
   padding-left: 1rem;
   padding-right: 1rem;
   color: var(--regal-navy-950);
   font-family: Futura;
   margin: 0.5rem;
+}
+
+[class*="clerk"],
+[class*="cl-"] {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 h1 {
@@ -101,7 +123,17 @@ p {
   justify-content: center;
   gap: 2rem;
   width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   padding: 1rem 0;
+  background-color: var(--soft-yellow);
+}
+
+.app-content {
+  padding-top: 7rem;
 }
 
 .navbar-item {
@@ -137,6 +169,43 @@ p {
   min-width: 200px;
   padding: 0 !important;
   margin: 0 !important;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.search-field::placeholder {
+  color: var(--regal-navy-800);
+}
+
+.create-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin: 1rem;
+  border: 2px solid var(--emerald-600);
+  border-radius: 1rem;
+  background-image: linear-gradient(to bottom right, var(--regal-navy-200), var(--regal-navy-100));
+}
+
+.create-project-input {
+  border: 1px solid var(--regal-navy-600);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+.create-project-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.create-project-button {
+  width: fit-content;
+  border: 1px solid var(--emerald-700);
+  background-color: var(--emerald-600);
+  color: var(--regal-navy-950);
 }
 
 .film-card-wrapper {
@@ -215,7 +284,13 @@ p {
 }
 
 .site-title-text {
-  
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.site-title-text:hover {
+  transform: scale(1.15) rotate(0deg) translate(0px, 0px) skewX(0deg);
+  opacity: 1;
+  filter: brightness(1);
 }
 
 /* #root {

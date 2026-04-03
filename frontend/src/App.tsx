@@ -1,7 +1,6 @@
-import { dummyData } from './dummy-data.tsx';
+import { type FormEvent, useEffect, useState } from 'react';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
-import accountIcon from './assets/account_circle.svg'
 import bookmarkIcon from './assets/Bookmark.svg'
 import dropdownIcon from './assets/Chevron down.svg'
 import goIcon from './assets/Corner up-right.svg'
@@ -12,7 +11,20 @@ import moonIcon from './assets/Moon.svg'
 import plusIcon from './assets/Plus.svg'
 import searchIcon from './assets/Search.svg'
 import sunIcon from './assets/Sun.svg'
-import {fetchData} from './dummy-data.tsx'
+
+// add light counterparts (rename paths if your filenames differ)
+import bookmarkIconLight from './assets/light_icons/Bookmark.svg'
+import dropdownIconLight from './assets/light_icons/Chevron down.svg'
+import goIconLight from './assets/light_icons/Corner up-right.svg'
+import editIconLight from './assets/light_icons/Edit.svg'
+import gridIconLight from './assets/light_icons/Grid.svg'
+import listIconLight from './assets/light_icons/List.svg'
+import moonIconLight from './assets/light_icons/Moon.svg'
+import plusIconLight from './assets/light_icons/Plus.svg'
+import searchIconLight from './assets/light_icons/Search.svg'
+import sunIconLight from './assets/light_icons/Sun.svg'
+
+import { createProject, fetchData, type ProjectData } from './data.tsx'
 import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/clerk-react';
 
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -22,20 +34,75 @@ import Results from "./pages/results";
 
 import './App.css'
 
+type Theme = 'light' | 'dark';
+
+type ThemeIcons = {
+  bookmark: string;
+  dropdown: string;
+  go: string;
+  edit: string;
+  grid: string;
+  list: string;
+  moon: string;
+  plus: string;
+  search: string;
+  sun: string;
+};
+
+const iconsByTheme: Record<Theme, ThemeIcons> = {
+  light: {
+    bookmark: bookmarkIcon,
+    dropdown: dropdownIcon,
+    go: goIcon,
+    edit: editIcon,
+    grid: gridIcon,
+    list: listIcon,
+    moon: moonIcon,
+    plus: plusIcon,
+    search: searchIcon,
+    sun: sunIcon,
+  },
+  dark: {
+    bookmark: bookmarkIconLight,
+    dropdown: dropdownIconLight,
+    go: goIconLight,
+    edit: editIconLight,
+    grid: gridIconLight,
+    list: listIconLight,
+    moon: moonIconLight,
+    plus: plusIconLight,
+    search: searchIconLight,
+    sun: sunIconLight,
+  },
+};
+
 function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const icons = iconsByTheme[theme];
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next: Theme = prev === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      return next;
+    });
+  };
+
   return (
     <>
       <SignedOut>
         <SignIn />
       </SignedOut>
       <SignedIn>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/film/:FILMID" element={<Film />} />
-          <Route path="/results" element={<Results />} />
-        </Routes>
+        <Navbar onThemeToggle={toggleTheme} currentTheme={theme} icons={icons}/>
+        <div className='app-content'>
+          <Routes>
+            <Route path="/" element={<Home icons={icons}/>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/film/:FILMID" element={<Film />} />
+            <Route path="/results" element={<Results />} />
+          </Routes>
+        </div>
       </SignedIn>
     </>
   )
@@ -65,30 +132,126 @@ function App() {
   ) */
 }
 
-function Home() {
+function Home({ icons }: { icons: ThemeIcons }) {
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [name, setName] = useState('');
+  const [dates, setDates] = useState('');
+  const [description, setDescription] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const response = await fetchData();
+        setProjects(response);
+      } catch (loadError) {
+        setError(loadError instanceof Error ? loadError.message : 'Failed to load projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  const handleCreateSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!name.trim() || !dates.trim() || !description.trim()) {
+      return;
+    }
+
+    try {
+      setIsCreating(true);
+      setError('');
+      const created = await createProject({
+        NAME: name.trim(),
+        DATES: dates.trim(),
+        DESCRIPTION: description.trim(),
+        USER_ID: '1',
+      });
+      setProjects((prev) => [created, ...prev]);
+      setName('');
+      setDates('');
+      setDescription('');
+      setShowCreateForm(false);
+    } catch (createError) {
+      setError(createError instanceof Error ? createError.message : 'Failed to create project');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const yourProjects = projects.filter((project) => project.USER_ID === '1');
+
   return (
     <>
+      {showCreateForm && (
+        <form className='create-project-form' onSubmit={handleCreateSubmit}>
+          <h4>Create a New Project</h4>
+          <input
+            className='create-project-input'
+            placeholder='Project Name'
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+          <input
+            className='create-project-input'
+            placeholder='Filming Dates'
+            value={dates}
+            onChange={(event) => setDates(event.target.value)}
+          />
+          <textarea
+            className='create-project-input create-project-textarea'
+            placeholder='Description'
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          <button type='submit' className='create-project-button' disabled={isCreating}>
+            {isCreating ? 'Saving...' : 'Save Project'}
+          </button>
+        </form>
+      )}
+      {error && <p>{error}</p>}
       <div className='side-by-side'>
-            <Projects name="Your Projects" icon={plusIcon}/>
-            <Projects name="Community Projects" icon={goIcon}/>
+            <Projects
+              name="Your Projects"
+              icon={icons.plus}
+              projects={yourProjects}
+              loading={loading}
+              onIconClick={() => setShowCreateForm((previous) => !previous)}
+            />
+            <Projects name="All Projects" icon={icons.go} projects={projects} loading={loading}/>
       </div>
     </>
   )
 }
 
-export function Navbar() {
+  type NavbarProps = {
+  onThemeToggle: () => void;
+  currentTheme: Theme;
+  icons: ThemeIcons;
+};
+
+export function Navbar({ onThemeToggle, currentTheme, icons }: NavbarProps) {
   const navigate = useNavigate();
+  const [searchType, setSearchType] = useState('projects');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const goHome = () => {
     navigate("/");
   };
 
   const goToResults = () => {
-    navigate("/results");
-  };
-
-  const goToAccount = () => {
-    navigate("/account");
+    const query = new URLSearchParams({
+      q: searchTerm.trim(),
+      type: searchType,
+    });
+    navigate(`/results?${query.toString()}`);
   };
 
   return (
@@ -97,16 +260,33 @@ export function Navbar() {
         <h3 onClick={goHome} className='site-title-text link'>CALLSHEET</h3>
       </div>
       <div className='navbar-item search-bar'>
-        <select className='search-selector link'>
-          <option>Projects</option>
-          <option>People</option>
+        <select
+          className='search-selector link'
+          value={searchType}
+          onChange={(event) => setSearchType(event.target.value)}
+        >
+          <option value='projects'>Projects</option>
+          <option value='people'>People</option>
         </select>
-        <div className='search-field'>
-          Search for projects/people
-        </div>
-        <img src={searchIcon} onClick={goToResults} className="search-icon icon link" alt="Search icon" />
+        <input
+          className='search-field'
+          placeholder='Search for projects or people'
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              goToResults();
+            }
+          }}
+        />
+        <img src={icons.search} onClick={goToResults} className="search-icon icon link" alt="Search icon" />
       </div>
-      <img src={sunIcon} className="navbar-item theme-icon icon link" alt="Theme icon, sun" />
+      <img
+        src={currentTheme === 'light' ? icons.moon : icons.sun}
+        className="navbar-item theme-icon icon link"
+        alt="Theme icon"
+        onClick={onThemeToggle}
+      />
       <UserButton />
     </div>
   )
@@ -165,7 +345,19 @@ export const FilmCard = ({ NAME, DATES, DESCRIPTION, FILMID }: { NAME?: string; 
   )
 }
 
-function Projects({name, icon}: {name?: string; icon?: string;}) {
+function Projects({
+  name,
+  icon,
+  projects,
+  loading,
+  onIconClick,
+}: {
+  name?: string;
+  icon?: string;
+  projects: ProjectData[];
+  loading: boolean;
+  onIconClick?: () => void;
+}) {
   return (
     <>
       <div className='projects-wrapper'>
@@ -173,10 +365,17 @@ function Projects({name, icon}: {name?: string; icon?: string;}) {
           <h2 className='projects-header-title'>
             {name}
           </h2>
-          <img src={icon} className="projects-header-icon icon link" alt="Action icon" />
+          <img
+            src={icon}
+            className="projects-header-icon icon link"
+            alt="Action icon"
+            onClick={onIconClick}
+          />
         </div>
         <div className='projects'>
-          {dummyData.map((data, key) => ( // REPLACE WITH QUERIED DATA
+          {loading && <p>Loading projects...</p>}
+          {!loading && projects.length === 0 && <p>No projects found.</p>}
+          {!loading && projects.map((data, key) => (
             <FilmCard
               key={key}
               FILMID={data.ID}

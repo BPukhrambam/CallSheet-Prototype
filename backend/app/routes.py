@@ -1,11 +1,69 @@
 from fastapi import Depends, Form, Request, status, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 
 from app import app, mail
 from app.models import User, Project, Role, Skill, UserToSkill, UserToProjectToRole
 from app.dependencies import get_current_user, get_db
 from flask_mail import Message
+
+
+def serialize_project(project: Project) -> dict[str, str]:
+    return {
+        "ID": str(project.id),
+        "NAME": project.name,
+        "DATES": project.filming_dates,
+        "DESCRIPTION": project.description,
+        "USER_ID": str(project.user_id),
+    }
+
+
+class CreateProjectRequest(BaseModel):
+    NAME: str
+    DATES: str
+    DESCRIPTION: str
+    USER_ID: str | None = None
+
+
+@app.get("/api/projects", response_class=JSONResponse)
+async def api_projects(
+    search: str = "",
+    db: Session = Depends(get_db)
+):
+    projects_query = db.query(Project)
+    search_term = search.strip().upper()
+    if search_term:
+        wildcard = f"%{search_term}%"
+        projects_query = projects_query.filter(
+            Project.name.ilike(wildcard)
+            | Project.description.ilike(wildcard)
+            | Project.filming_dates.ilike(wildcard)
+        )
+
+    projects = projects_query.order_by(Project.id.asc()).all()
+    return JSONResponse({"projects": [serialize_project(project) for project in projects]})
+
+
+@app.post("/api/projects", response_class=JSONResponse, status_code=status.HTTP_201_CREATED)
+async def api_create_project(
+    project_data: CreateProjectRequest,
+    db: Session = Depends(get_db)
+):
+    raw_user_id = (project_data.USER_ID or "1").strip()
+    user_id = int(raw_user_id) if raw_user_id.isdigit() else 1
+
+    project = Project(
+        name=project_data.NAME.strip().upper(),
+        filming_dates=project_data.DATES.strip(),
+        description=project_data.DESCRIPTION.strip().upper(),
+        user_id=user_id,
+    )
+    db.add(project)
+    db.commit()
+    db.refresh(project)
+
+    return JSONResponse(serialize_project(project), status_code=status.HTTP_201_CREATED)
 
 
 @app.get("/", response_class=JSONResponse)

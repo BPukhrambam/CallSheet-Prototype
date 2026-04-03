@@ -1,5 +1,6 @@
 from fastapi import Depends, Form, Request, status, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
+from flask import jsonify
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
@@ -74,8 +75,7 @@ async def base(
 ):
     projects = db.query(Project).all()
     your_projects = db.query(Project).filter(Project.user_id == current_user.id).all()
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": "Home",
         "projects": projects,
         "user": current_user,
@@ -90,8 +90,7 @@ async def register_get(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     
     skills = db.query(Skill).all()
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": "Register",
         "skills": skills
     })
@@ -118,8 +117,7 @@ async def register_post(
     
     existing_user = db.query(User).filter(User.email == email.upper()).first()
     if existing_user:
-        return JSONResponse({
-            "request": request,
+        return ({
             "title": "Register",
             "error": "User already exists."
         })
@@ -154,8 +152,7 @@ async def login_get(request: Request):
     if user_id:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": "Sign In"
     })
 
@@ -170,8 +167,7 @@ async def login_post(
 ):
     user = db.query(User).filter(User.email == email.upper()).first()
     if user is None or not user.check_password(password):
-        return JSONResponse({
-            "request": request,
+        return ({
             "title": "Sign In",
             "error": "Invalid email or password"
         })
@@ -188,8 +184,7 @@ async def new_project_get(
     db: Session = Depends(get_db)
 ):
     roles = db.query(Role).all()
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": "Create New Project",
         "roles": roles
     })
@@ -241,8 +236,7 @@ async def user_profile(
     user_name = f"{user.first_name} {user.last_name}"
     projects = db.query(Project).filter(Project.user_id == user.id).all()
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": user_name,
         "user": user,
         "user_name": user_name,
@@ -273,8 +267,7 @@ async def send_contact_message(
     msg.body = message
     mail.send(msg)
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": f"{user.first_name} {user.last_name}",
         "user": user,
         "user_name": f"{user.first_name} {user.last_name}",
@@ -305,8 +298,7 @@ async def project_display(
         if role:
             roles_needed_list.append(role.title)
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": project.name,
         "creator": creator,
         "roles_needed_list": roles_needed_list,
@@ -323,8 +315,7 @@ async def project_search(
     projects = db.query(Project).all()
     roles = db.query(Role).all()
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "projects": projects,
         "roles": roles
     })
@@ -367,8 +358,7 @@ async def project_search_result_name(
         creator = db.query(User).filter(User.id == project.user_id).first()
         results.append({"project": project, "creator": creator})
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "query": name,
         "results": results
     })
@@ -396,8 +386,7 @@ async def project_search_result_role(
             creator = db.query(User).filter(User.id == project.user_id).first()
             results.append({"project": project, "creator": creator})
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "query": role_obj.title,
         "results": results,
         "role_title": role_obj.title
@@ -411,8 +400,7 @@ async def profile_search(
     db: Session = Depends(get_db)
 ):
     skills = db.query(Skill).all()
-    return JSONResponse({
-        "request": request,
+    return ({
         "skills": skills
     })
 
@@ -458,8 +446,7 @@ async def profile_search_result_skill(
         if user:
             user_list.append(user.username)
     
-    return JSONResponse({
-        "request": request,
+    return ({
         "title": "Profile Search by Skill",
         "skill_title": skill.title,
         "user_list": user_list
